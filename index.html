@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Interface</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f2f2f2;
+        }
+
+        .chat-container {
+            max-width: 75%;
+            margin: 50px auto;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .chat-box {
+            overflow-y: auto;
+            max-height: 400px;
+            padding: 20px;
+            text-align: right;
+        }
+
+        .message {
+            margin-bottom: 20px;
+        }
+
+        .user-message {
+            color: #333;
+        }
+
+        .assistant-message {
+            color: #007bff;
+        }
+
+        .input-box {
+            padding: 10px;
+            background-color: #f2f2f2;
+            text-align: center;
+        }
+
+        .input-field {
+            width: 70%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="chat-container">
+    <div class="chat-box" id="chatBox">
+        <!-- Chat messages will be displayed here -->
+        <div class="message user-message">你能做什么！</div>
+        <!-- Example user message -->
+
+        <!-- Add more messages dynamically using JavaScript -->
+    </div>
+    <div class="input-box">
+        <input type="text" id="userInput" class="input-field" placeholder="Type your message here..." onkeydown="sendMessage(event)">
+    </div>
+</div>
+
+<script>
+    function sendMessage(event) {
+        if (event.key === "Enter") {
+            // Add logic to send message to API and update chatBox
+            // You'll need to use JavaScript to interact with the API
+            // For simplicity, this example just adds a user message to the chatBox
+
+            const userInput = document.getElementById("userInput").value;
+            const chatBox = document.getElementById("chatBox");
+
+            const userMessageElement = document.createElement("div");
+            userMessageElement.className = "message user-message";
+            userMessageElement.textContent = userInput;
+
+            chatBox.appendChild(userMessageElement);
+
+            // Clear input field
+            document.getElementById("userInput").value = "";
+        }
+    }
+</script>
+
+</body>
+</html>
