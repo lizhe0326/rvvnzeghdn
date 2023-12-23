@@ -88,6 +88,10 @@
 
         // 模拟API请求，实际中应该发送请求到你的后端服务器
         function sendRequestToAPI(userMessage) {
+            if (userMessage.trim() === '') {
+                return; // Don't send empty messages
+            }
+
             // 使用fetch发送请求到后端
             fetch('https://ai.tentech.top/v1/chat/completions', {
                 method: 'POST',
