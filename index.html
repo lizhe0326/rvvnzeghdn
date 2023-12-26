@@ -24,30 +24,61 @@
         .dialog-box {
             overflow-y: auto;
             max-height: 400px;
-            padding: 20px;
-            text-align: right;
+            padding: 10px; /* Reduced padding for better visibility */
             border-bottom: 1px solid #ddd;
         }
 
+        .user-message,
+        .model-message {
+            position: relative;
+            text-align: left;
+            margin-bottom: 10px;
+            padding: 8px;
+            border-radius: 5px;
+            max-width: 70%;
+        }
+
+        .user-avatar,
+        .model-avatar {
+            position: absolute;
+            top: -15px;
+            border-radius: 50%;
+        }
+
+        .user-avatar {
+            background-color: #007bff;
+        }
+
+        .model-avatar {
+            background-color: #dc3545;
+        }
+
         .user-message {
-            text-align: right;
-            color: #007bff;
+            background-color: #007bff;
+            color: #fff;
+            margin-left: auto;
         }
 
         .model-message {
-            text-align: left;
-            color: #28a745;
+            background-color: #dc3545;
+            color: #fff;
+            margin-right: auto;
         }
 
         .input-box {
-            padding: 10px;
+            padding: 40px;
             background-color: #f5f5f5;
             text-align: center;
-            border-top: 1px solid #ddd;
+            border-top: 10px solid #ddd;
         }
 
         .user-input {
-            width: 90%;
+            width: 80%;
+            padding: 10px;
+        }
+
+        .model-selector {
+            width: 20%;
             padding: 10px;
         }
     </style>
@@ -59,6 +90,13 @@
             <!-- 对话内容将通过JavaScript动态添加 -->
         </div>
         <div class="input-box">
+            <select id="modelSelector" class="model-selector">
+                <option value="gpt-3.5-turbo">gpt-3.5-turbo</option>
+                <option value="gpt-3.5-turbo-0301">gpt-3.5-turbo-0301</option>
+                <option value="gpt-3.5-turbo-0613">gpt-3.5-turbo-0613</option>
+                <option value="gpt-3.5-turbo-1106">gpt-3.5-turbo-1106</option>
+                <option value="gpt-4">gpt-4</option>
+            </select>
             <input type="text" id="userInput" class="user-input" placeholder="在此输入...">
         </div>
     </div>
@@ -66,15 +104,17 @@
     <script>
         const dialogBox = document.getElementById('dialogBox');
         const userInput = document.getElementById('userInput');
+        const modelSelector = document.getElementById('modelSelector');
 
         // 处理用户输入
         userInput.addEventListener('keyup', function(event) {
             if (event.key === 'Enter') {
                 const userMessage = userInput.value.trim();
+                const selectedModel = modelSelector.value;
                 if (userMessage !== '') {
                     appendMessage('user', userMessage);
                     // 调用API发送请求，并处理返回结果
-                    sendRequestToAPI(userMessage);
+                    sendRequestToAPI(userMessage, selectedModel);
                     userInput.value = '';
                 }
             }
@@ -87,7 +127,7 @@
         }
 
         // 模拟API请求，实际中应该发送请求到你的后端服务器
-        function sendRequestToAPI(userMessage) {
+        function sendRequestToAPI(userMessage, selectedModel) {
             if (userMessage.trim() === '') {
                 return; // Don't send empty messages
             }
@@ -101,7 +141,7 @@
                     'Content-Type': 'application/json;charset=UTF-8',
                 },
                 body: JSON.stringify({
-                    model: 'gpt-3.5-turbo',
+                    model: selectedModel,
                     messages: [
                         { role: 'user', content: userMessage }
                     ],
@@ -115,10 +155,19 @@
 
         // 添加消息到对话框
         function appendMessage(role, content) {
+            const messageContainer = document.createElement('div');
+            messageContainer.className = role === 'user' ? 'user-message' : 'model-message';
+
+            const avatar = document.createElement('div');
+            avatar.className = `${role}-avatar ${role === 'user' ? 'user-avatar' : 'model-avatar'}`;
+            messageContainer.appendChild(avatar);
+
             const messageElement = document.createElement('div');
-            messageElement.className = role === 'user' ? 'user-message' : 'model-message';
             messageElement.textContent = content;
-            dialogBox.appendChild(messageElement);
+            messageContainer.appendChild(messageElement);
+
+            dialogBox.appendChild(messageContainer);
+
             // 滚动到对话框底部
             dialogBox.scrollTop = dialogBox.scrollHeight;
         }
